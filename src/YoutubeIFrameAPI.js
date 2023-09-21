@@ -6,33 +6,12 @@ const onYouTubeIframeAPIReady = () => {
     debugger;
 }
 
-const buildUrl = (baseUrl, params) => {
-    const url = new URL(baseUrl);
-    for (let [key, value] of Object.entries(params)) {
-        console.log(key, value);
-        if (![null, undefined].includes(value)) {
-            url.searchParams.set(key, `${value}`);
-        }
-    }
-    console.log(url.toString());
-    return url.toString();
-}
-
-const YoutubeIFrameAPI = () => {
+const YoutubeIFrameAPI = ({config}) => {
     const iframeRef = useRef(null);
     const [player, setPlayer] = useState(null);
     const [controls, setControls] = useState(false);
     const [end, setEnd] = useState(null);
     const [start, setStart] = useState(0);
-
-    useEffect(() => {
-        var tag = document.createElement('script');
-
-        tag.src = "https://www.youtube.com/iframe_api";
-        var firstScriptTag = document.getElementsByTagName('script')[0];
-        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-    }, []);
-
 
     const applyStartEnd = () => {
         player.seekTo(start, true);
@@ -43,14 +22,14 @@ const YoutubeIFrameAPI = () => {
 
     return (
         <div className="App">
-            <div className="p-8 float-left">
+            <div className="p-8 w-full float-left">
                 <YouTube
                     id="player"
-                    videoId="M7lc1UVf-VE"
+                    videoId={config.id}
                     opts={
                         {
-                            width:640,
-                            height:320,
+                            width:config.w,
+                            height:config.h,
                             playerVars: {
                                 controls: controls ? 1 : 0,
                                 fs: 1,
@@ -63,7 +42,7 @@ const YoutubeIFrameAPI = () => {
                     }}
                 />
             </div>
-            <div className="flex flex-col w-1/4 p-8 gap-10">
+            <div className="flex flex-col w-full md:w-1/4 p-8 gap-10">
                 <Button onClick={() => setControls(!controls)}>Show/hide controls</Button>
                 <div className="flex flex-col gap-5 border p-4 shadow">
                     <label className="flex flex-row">
@@ -83,12 +62,9 @@ const YoutubeIFrameAPI = () => {
                     <Button onClick={applyStartEnd}>Apply</Button>
                 </div>
                 <Button onClick={() => player.playVideo()}>Play</Button>
-                <Button onClick={() => player.pauseVideo()}>Stop</Button>
-                <Button onClick={() => {
-                        player.playVideo()
-                        iframeRef.current.requestFullScreen();
-                    }
-                }>Fullscreen</Button>
+                <Button onClick={() => player.pauseVideo()}>Pause</Button>
+                <Button onClick={() => player.stopVideo()}>Stop</Button>
+                <Button disabled>Fullscreen</Button>
             </div>
         </div>
     );

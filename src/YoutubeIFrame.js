@@ -12,7 +12,7 @@ const buildUrl = (baseUrl, params) => {
     return url.toString();
 }
 
-function YoutubeIFrame() {
+function YoutubeIFrame({config}) {
     const [controls, setControls] = useState(false);
     const [end, setEnd] = useState(null);
     const [start, setStart] = useState(null);
@@ -22,15 +22,17 @@ function YoutubeIFrame() {
                 <iframe
                     id="ytplayer"
                     type="text/html"
-                    width="640"
-                    height="360"
+                    width={config.w}
+                    height={config.h}
                     src={buildUrl(
-                        "https://www.youtube.com/embed/M7lc1UVf-VE?autoplay=1&mute=1",
+                        `https://www.youtube.com/embed/${config.id}`,
                         {
                             controls: controls ? 1 : 0,
                             end,
                             fs: controls ? 1 : 0,
-                            start
+                            start,
+                            autoplay: 1,
+                            mute: 1,
                         })}
                     autoplay={1}
                     end={end ? end : undefined}
@@ -39,7 +41,7 @@ function YoutubeIFrame() {
                     allowFullScreen
                 />
             </div>
-            <div className="flex flex-col w-1/4 p-8 gap-10">
+            <div className="flex flex-col w-full md:w-1/4 p-8 gap-10">
                 <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold px-4 py-2 rounded" onClick={() => setControls(!controls)}>Show/hide controls</button>
                 <label className="flex flex-row">
                     Start at second:
