@@ -9,13 +9,12 @@ const VimeoIFrame= ({config}) => {
     const [fullscreen, setFullscreen] = useState(false);
     const [start, setStart] = useState(0);
 
-    const url = `https://player.vimeo.com/video/${config.id}?background=1`;
+    const url = `https://player.vimeo.com/video/${config.id}?controls=0&autoplay=1&muted=0&loop=1&responsive=true&start=10&t=10`;
 
     useEffect(() => {
         if (iframeRef.current) {
             const plyr = new Player(iframeRef.current);
 
-            plyr.on('play', () => plyr.setVolume(1))
             setPlayer(plyr);
         }
     }, [iframeRef]);
